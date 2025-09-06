@@ -9,8 +9,20 @@ const {
   verifyOtp, 
   resendOtp 
 } = require("../controllers/authController");
+const { validateRegistration, validateLogin } = require("../middleware/validation");
+const { registerLimiter, loginLimiter, otpLimiter } = require("../middleware/rateLimiter");
 
-// ... your existing routes ...
+// Registration route
+router.post("/register", registerLimiter, validateRegistration, register);
+
+// Login route  
+router.post("/login", loginLimiter, validateLogin, login);
+
+// OTP verification route
+router.post("/verify-otp", otpLimiter, verifyOtp);
+
+// Resend OTP route
+router.post("/resend-otp", otpLimiter, resendOtp);
 
 // Google OAuth routes
 router.get("/google", 
@@ -19,7 +31,7 @@ router.get("/google",
 
 router.get("/google/callback",
   passport.authenticate("google", { 
-    failureRedirect: "/login.html?error=google_auth_failed",
+    failureRedirect: "/register.html?error=google_auth_failed",
     session: false 
   }),
   (req, res) => {
@@ -31,8 +43,7 @@ router.get("/google/callback",
         { expiresIn: "24h" }
       );
       
-      // Redirect to a success page with token
-      // In a real app, you'd redirect to your frontend
+      // Redirect to dashboard with token
       res.redirect(`/auth-success.html?token=${token}&user=${encodeURIComponent(JSON.stringify({
         id: req.user._id,
         fullName: req.user.fullName,
@@ -40,7 +51,7 @@ router.get("/google/callback",
       }))}`);
     } catch (err) {
       console.error("JWT Error:", err);
-      res.redirect("/login.html?error=auth_failed");
+      res.redirect("/register.html?error=auth_failed");
     }
   }
 );

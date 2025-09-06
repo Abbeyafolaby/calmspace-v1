@@ -4,8 +4,90 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Calmspace</title>
+    <link rel="stylesheet" href="./css/calmspace.css">
+    <link rel="icon" type="image/jpeg" href="https://i.postimg.cc/g0SwLJLZ/Calmspace-Logo.png">
 </head>
 <body>
-    
+    <div class="sign_section">
+        <div class="sections starto">
+            <img src="https://i.postimg.cc/XY0mbs4Z/Calmspace-Logo.png" alt="calmspace" style="height:60px">
+            <h1 class="start_text">Welcome back</h1>
+            <h4 class="calms1">Continue your calm journey</h4>
+            <p class="calms">Sign in to access your personalized mental wellness dashboard.</p><br><br>
+
+            <div class="user_number">
+                <div class="users">
+                    <h2>87%</h2>
+                    <p>Users report reduced <br>stress</p>
+                </div>
+                <div class="users">
+                    <h2>15k+</h2>
+                    <p>Guided exercises</p>
+                </div>
+                <div class="users">
+                    <h2>24/7</h2>
+                    <p>Community support</p>
+                </div>
+            </div><br><br><br><br><br><br><br><br><br><br><br><br>
+        </div>
+        
+        <div class="sections sig">
+            <h1 class="start_text1">Sign In</h1>
+            
+            <!-- Message display area -->
+            <div id="msg" style="margin-bottom: 15px;"></div>
+            
+            <form id="loginForm">
+                <label for="email">Email</label><br>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required><br><br><br>
+                
+                <label for="password">Password</label><br>
+                <div class="password-container">
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                    <span class="toggle-icon" onclick="togglePassword()">👁️</span>
+                </div><br><br><br>
+
+                <button type="submit" class="create_button">Sign In</button><br><br>
+
+                <div class="divider">Or</div>
+
+                <button type="button" class="google-btn" onclick="loginWithGoogle()">
+                    <img src="https://i.postimg.cc/cJbXJxFJ/googlr-removebg-preview.png" alt="Google" style="height:30px"> 
+                    <span>Continue with Google</span> 
+                </button>
+                
+                <div class="sign_below">
+                    <p>Don't have an account? <a href="register.html">Sign up</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword() {
+            const passwordField = document.getElementById("password");
+            const toggleIcon = document.querySelector(".toggle-icon");
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                toggleIcon.textContent = "🙈";
+            } else {
+                passwordField.type = "password";
+                toggleIcon.textContent = "👁️";
+            }
+        }
+
+        // Check for error in URL params
+        const urlParams = new URLSearchParams(window.location.search);
+        const error = urlParams.get('error');
+        if (error) {
+            const msgDiv = document.getElementById('msg');
+            msgDiv.innerHTML = `<div style="color: red; padding: 10px; background: #ffebee; border-radius: 4px;">${error === 'google_auth_failed' ? 'Google authentication failed. Please try again.' : 'Authentication failed.'}</div>`;
+        }
+
+        function loginWithGoogle() {
+            window.location.href = '/auth/google';
+        }
+    </script>
+    <script src="./js/main.js"></script>
 </body>
 </html>

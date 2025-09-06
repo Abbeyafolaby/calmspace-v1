@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Calmspace</title>
+    <link rel="icon" type="image/jpeg" href="https://i.postimg.cc/g0SwLJLZ/Calmspace-Logo.png">
+</head>
+<body>
+    <div style="font-family: sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
+        <!-- Header -->
+        <header style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e0e0e0; padding-bottom: 20px; margin-bottom: 30px;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <img src="https://i.postimg.cc/XY0mbs4Z/Calmspace-Logo.png" alt="Calmspace" style="height: 50px;">
+                <h1 style="margin: 0; color: #059669;">Calmspace Dashboard</h1>
+            </div>
+            <button onclick="logout()" style="background: #dc2626; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
+                Logout
+            </button>
+        </header>
+
+        <!-- Welcome Section -->
+        <div style="background: #f0fdf4; padding: 20px; border-radius: 10px; margin-bottom: 30px;">
+            <h2 style="margin: 0 0 10px 0; color: #047857;">Welcome to your calm space!</h2>
+            <p style="margin: 0; color: #065f46;" id="welcome-message">Loading user information...</p>
+        </div>
+
+        <!-- User Information Card -->
+        <div style="background: white; border: 1px solid #e0e0e0; border-radius: 10px; padding: 25px; margin-bottom: 30px;">
+            <h3 style="margin: 0 0 20px 0; color: #047857; border-bottom: 1px solid #e0e0e0; padding-bottom: 10px;">
+                Your Profile Information
+            </h3>
+            <div style="display: grid; grid-template-columns: 150px 1fr; gap: 15px; align-items: center;">
+                <strong>Full Name:</strong>
+                <span id="user-fullname">Loading...</span>
+                
+                <strong>Email:</strong>
+                <span id="user-email">Loading...</span>
+                
+                <strong>Member Since:</strong>
+                <span id="member-since">Loading...</span>
+                
+                <strong>Account Status:</strong>
+                <span style="color: #059669; font-weight: bold;">✅ Verified</span>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div style="background: white; border: 1px solid #e0e0e0; border-radius: 10px; padding: 25px;">
+            <h3 style="margin: 0 0 20px 0; color: #047857; border-bottom: 1px solid #e0e0e0; padding-bottom: 10px;">
+                Quick Actions
+            </h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                <button style="background: #10b981; color: white; border: none; padding: 15px; border-radius: 8px; cursor: pointer;">
+                    🧘 Start Meditation
+                </button>
+                <button style="background: #34d399; color: white; border: none; padding: 15px; border-radius: 8px; cursor: pointer;">
+                    📝 Mood Tracker
+                </button>
+                <button style="background: #6ee7b7; color: white; border: none; padding: 15px; border-radius: 8px; cursor: pointer;">
+                    👥 Community
+                </button>
+                <button style="background: #a7f3d0; color: #047857; border: none; padding: 15px; border-radius: 8px; cursor: pointer;">
+                    ⚙️ Settings
+                </button>
+            </div>
+        </div>
+
+        <!-- Stats Section -->
+        <div style="background: white; border: 1px solid #e0e0e0; border-radius: 10px; padding: 25px; margin-top: 30px;">
+            <h3 style="margin: 0 0 20px 0; color: #047857; border-bottom: 1px solid #e0e0e0; padding-bottom: 10px;">
+                Your Journey
+            </h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; text-align: center;">
+                <div style="background: #f0fdf4; padding: 20px; border-radius: 8px;">
+                    <div style="font-size: 24px; font-weight: bold; color: #047857;">0</div>
+                    <div style="color: #065f46; font-size: 14px;">Days Streak</div>
+                </div>
+                <div style="background: #f0fdf4; padding: 20px; border-radius: 8px;">
+                    <div style="font-size: 24px; font-weight: bold; color: #047857;">0</div>
+                    <div style="color: #065f46; font-size: 14px;">Sessions Completed</div>
+                </div>
+                <div style="background: #f0fdf4; padding: 20px; border-radius: 8px;">
+                    <div style="font-size: 24px; font-weight: bold; color: #047857;">0</div>
+                    <div style="color: #065f46; font-size: 14px;">Minutes Meditated</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load user data when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserData();
+        });
+
+        function loadUserData() {
+            const token = localStorage.getItem('token');
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+            if (!token || !user.id) {
+                // No valid session, redirect to login
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Display user information
+            document.getElementById('user-fullname').textContent = user.fullName || 'Unknown';
+            document.getElementById('user-email').textContent = user.email || 'Unknown';
+            document.getElementById('welcome-message').textContent = `Hello ${user.fullName}! Ready to continue your wellness journey?`;
+            
+            // Set member since date (you can enhance this with actual registration date from backend)
+            document.getElementById('member-since').textContent = new Date().toLocaleDateString();
+        }
+
+        function logout() {
+            // Clear stored data
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            
+            // Redirect to login page
+            window.location.href = 'login.html';
+        }
+
+        // Add click handlers for quick action buttons
+        document.querySelectorAll('button').forEach(button => {
+            if (button.textContent.includes('Start Meditation')) {
+                button.onclick = () => alert('Meditation feature coming soon!');
+            } else if (button.textContent.includes('Mood Tracker')) {
+                button.onclick = () => alert('Mood Tracker feature coming soon!');
+            } else if (button.textContent.includes('Community')) {
+                button.onclick = () => alert('Community feature coming soon!');
+            } else if (button.textContent.includes('Settings')) {
+                button.onclick = () => alert('Settings feature coming soon!');
+            }
+        });
+    </script>
+</body>
+</html>

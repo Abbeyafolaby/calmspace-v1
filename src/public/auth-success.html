@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication Success - Calmspace</title>
+    <link rel="icon" type="image/jpeg" href="https://i.postimg.cc/g0SwLJLZ/Calmspace-Logo.png">
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f8fafc;
+        }
+        .container {
+            text-align: center;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            max-width: 400px;
+        }
+        .success-icon {
+            font-size: 64px;
+            color: #059669;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #047857;
+            margin-bottom: 10px;
+        }
+        p {
+            color: #6b7280;
+            margin-bottom: 20px;
+        }
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #059669;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="https://i.postimg.cc/XY0mbs4Z/Calmspace-Logo.png" alt="Calmspace" style="height: 60px; margin-bottom: 20px;">
+        <div class="success-icon">✅</div>
+        <h1>Authentication Successful!</h1>
+        <p>Welcome to Calmspace. Redirecting you to your dashboard...</p>
+        <div class="loading"></div>
+    </div>
+
+    <script>
+        // Get token and user data from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        const userStr = urlParams.get('user');
+
+        if (token && userStr) {
+            try {
+                const user = JSON.parse(decodeURIComponent(userStr));
+                
+                // Store in localStorage
+                localStorage.setItem('token', token);
+                localStorage.setItem('user', JSON.stringify(user));
+                
+                // Redirect to dashboard after 2 seconds
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 2000);
+                
+            } catch (err) {
+                console.error('Error parsing user data:', err);
+                window.location.href = 'register.html?error=auth_failed';
+            }
+        } else {
+            // No token or user data, redirect to register
+            window.location.href = 'register.html?error=auth_failed';
+        }
+    </script>
+</body>
+</html>

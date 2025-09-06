@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verification - Calmspace</title>
+    <link rel="stylesheet" href="./css/calmspace.css">
+    <link rel="icon" type="image/jpeg" href="https://i.postimg.cc/g0SwLJLZ/Calmspace-Logo.png">
+</head>
+<body>
+    <div class="sign_section">
+        <div class="sections" style="max-width: 500px; margin: 0 auto;">
+            <div style="text-align: center;">
+                <img src="https://i.postimg.cc/XY0mbs4Z/Calmspace-Logo.png" alt="calmspace" style="height:60px">
+                <h1 class="start_text1">Verify Your Email</h1>
+                <p class="calms1">We've sent a verification code to your email address.</p>
+            </div>
+            
+            <!-- Message display area -->
+            <div id="msg" style="margin-bottom: 15px;"></div>
+            
+            <form id="otpForm">
+                <label for="otp">Enter Verification Code</label><br>
+                <input type="text" id="otp" name="otp" placeholder="Enter 6-digit code" required maxlength="6" pattern="[0-9]{6}"><br><br><br>
+                
+                <button type="submit" class="create_button">Verify Email</button><br><br>
+                
+                <div style="text-align: center;">
+                    <p>Didn't receive the code? <button type="button" onclick="resendOtp()" style="background: none; border: none; color: var(--green7); cursor: pointer; text-decoration: underline;">Resend Code</button></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Get email from URL params for display
+        const urlParams = new URLSearchParams(window.location.search);
+        const email = urlParams.get('email');
+        if (email) {
+            document.querySelector('.calms1').textContent = `We've sent a verification code to ${decodeURIComponent(email)}.`;
+        }
+
+        async function resendOtp() {
+            const userId = urlParams.get('userId');
+            if (!userId) return;
+
+            try {
+                const res = await fetch('/auth/resend-otp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId })
+                });
+                
+                const data = await res.json();
+                document.getElementById('msg').innerHTML = 
+                    `<div style="color: green; padding: 10px; background: #e8f5e8; border-radius: 4px;">New verification code sent!</div>`;
+            } catch (err) {
+                document.getElementById('msg').innerHTML = 
+                    `<div style="color: red; padding: 10px; background: #ffebee; border-radius: 4px;">Failed to resend code. Please try again.</div>`;
+            }
+        }
+    </script>
+    <script src="./js/main.js"></script>
+</body>
+</html>
